@@ -1,11 +1,15 @@
 #include "Specs.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 #include <numeric>
 
-void Specs::parseFromFile(std::filesystem::path filepath) {
+Specs::Specs() {}
+
+Specs::Specs(const std::filesystem::path& filepath) { parseFromFile(filepath); }
+
+void Specs::parseFromFile(const std::filesystem::path& filepath) {
   std::fstream file(filepath);
 
   if (!file.is_open()) {
@@ -15,27 +19,25 @@ void Specs::parseFromFile(std::filesystem::path filepath) {
 
   // Skip useless lines
   std::string line;
-  while (std::getline(file, line) && (line != "begin")) {
-  }
+  while (std::getline(file, line) && (line != "begin")) {}
 
   // Parse widths and heights until it reached end
+  int begin, sep, end, width, height;
   while (std::getline(file, line) && (line != "end")) {
-    int begin = line.find("~~");
-    if (begin != -1) {
-      // Has begin
-      int sep = line.find("!-!");
-      if (sep != -1) {
-        // Has separator
-        int end = line.find("??");
-        if (end != -1) {
-          // Has end -> CORRECT FORMAT
-          int width = std::stoi(line.substr(begin + 2, sep - begin - 2));
-          int height = std::stoi(line.substr(sep + 3, end - sep - 3));
-          widths.push_back(width);
-          heights.push_back(height);
-        }
-      }
-    }
+    if ((begin = line.find("~~")) == -1) continue;
+    if ((sep = line.find("!-!")) == -1) continue;
+    if ((end = line.find("??")) == -1) continue;
+
+    // Has begin, has separator, has end -> CORRECT FORMAT
+    width = std::stoi(line.substr(begin + 2, sep - begin - 2));
+    height = std::stoi(line.substr(sep + 3, end - sep - 3));
+    widths.push_back(width);
+    heights.push_back(height);
+  }
+
+  if (widths.size() == 0 || heights.size() == 0) {
+    std::cerr << "Nothing valid to parse found in " << filepath << std::endl;
+    exit(1);
   }
 }
 

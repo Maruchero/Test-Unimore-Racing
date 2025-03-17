@@ -1,5 +1,4 @@
 #include<iostream>
-#include "utils.h"
 #include "Specs.h"
 #include "imageEditing.h"
 
@@ -15,8 +14,7 @@ int main(int argc, char* argv[]){
 
     // 2. Parse the spec file
     std::filesystem::path filepath = argv[2];
-    Specs mySpecs;
-    mySpecs.parseFromFile(filepath);
+    Specs mySpecs(filepath);
 
     // 3. Load the image
     cv::Mat img = readImage(argv[1]);

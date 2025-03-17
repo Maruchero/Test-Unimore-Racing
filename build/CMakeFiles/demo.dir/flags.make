@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/ubuntu/unimoreracing/Test-Unimore-Racing/include -isystem /usr/include/opencv4
 
-CXX_FLAGS = 
+CXX_FLAGS = -std=gnu++17
 

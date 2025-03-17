@@ -19,7 +19,10 @@ class Specs {
   std::vector<int> heights;
 
 public:
-  void parseFromFile(std::filesystem::path filename);
+  Specs();
+  Specs(const std::filesystem::path& filepath);
+
+  void parseFromFile(const std::filesystem::path& filename);
   int getMaxWidth();
   int getMaxHeight();
   int getAvgWidth();
